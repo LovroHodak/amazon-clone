@@ -2,7 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import * as serviceWorker from './serviceWorker'
+import reducer, {initialState} from './Reducer'
+//import * as serviceWorker from './serviceWorker'
 import { StateProvider } from './StateProvider';
 
 ReactDOM.render(
@@ -17,4 +18,4 @@ ReactDOM.render(
 
 
 
-serviceWorker.unregister()
+//serviceWorker.unregister()
