@@ -2,16 +2,17 @@ import React, { useState, useEffect } from 'react'
 import { useStateValue } from '../StateProvider';
 import './Payment.css';
 import CheckoutProduct from './CheckoutProduct'
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js'
 import CurrencyFormat from 'react-currency-format'
 import { getBasketTotal } from '../Reducer'
-import axios from '../axios'
+import axios from '../Axios'
 
 
 function Payment() {
 
     const [{basket, user}, dispatch] = useStateValue()
+    const history = useHistory()
 
     const stripe = useStripe()
     const elements = useElements()
@@ -19,7 +20,7 @@ function Payment() {
     const [ succeeded, setSucceeded] = useState(false)
     const [processing, setProcessing ] = useState('')
     const [error, setError] = useState(null)
-    const [disabled, setDisabled] = useState(null)
+    const [disabled, setDisabled] = useState(true)
     const [ clientSecret, setClientSecret] = useState(true)
 
     useEffect(() => {
@@ -37,6 +38,8 @@ function Payment() {
         getClientSecret()
     }, [basket])
 
+    console.log('the secret is >>>', clientSecret)
+
     const handleSubmit = async (event) => {
         //fancy stripe functionality here
         event.preventDefault()
@@ -46,6 +49,14 @@ function Payment() {
             payment_method: {
                 card: elements.getElement(CardElement)
             }
+        }).then(({paymentIntent}) => {
+            //payment intent = payment conformation
+
+            setSucceeded(true)
+            setError(null)
+            setProcessing(false)
+
+            history.replace('/orders')
         })
     }
 
